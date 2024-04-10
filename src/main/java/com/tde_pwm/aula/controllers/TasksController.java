@@ -1,7 +1,6 @@
 package com.tde_pwm.aula.controllers;
 
 import com.tde_pwm.aula.models.TasksModel;
-import com.tde_pwm.aula.models.UsersModel;
 import com.tde_pwm.aula.repositories.TasksRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
