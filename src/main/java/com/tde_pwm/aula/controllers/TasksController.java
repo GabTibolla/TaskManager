@@ -21,7 +21,7 @@ public class TasksController {
     }
 
     @GetMapping("/api/task/{id}")
-    public ResponseEntity getTask(@PathVariable(name="id") int id) {
+    public ResponseEntity getTask(@PathVariable(name="id") String id) {
       return tasksRepository.findById(id)
               .map(record -> ResponseEntity.ok().body(record))
               .orElse(ResponseEntity.notFound().build());
