@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.tde_pwm</groupId>
-	<artifactId>aula</artifactId>
+	<artifactId>API</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>aula</name>
 	<description>Aula Prog Web Mobile</description>

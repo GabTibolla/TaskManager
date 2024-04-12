@@ -32,17 +32,11 @@ public class SubTaskController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("ID da task é inválido");
         }
 
-        UsersModel user = entityManager.find(UsersModel.class, task.getAssignedByUser().getId());
-
-        if (user == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário é inválido");
-        }
-
-        subTask.setAssignedBy(user);
+        subTask.setAssignedBy(task.getAssignedByUser());
         subTask.setTask(task);
 
         SubTaskModel subTaskModel = subTaskRepository.save(subTask);
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok().body(subTaskModel);
     }
 }
