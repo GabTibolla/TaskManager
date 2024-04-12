@@ -3,6 +3,7 @@ package com.tde_pwm.aula.controllers;
 import com.tde_pwm.aula.helpers.UtilHelper;
 import com.tde_pwm.aula.models.UsersModel;
 import com.tde_pwm.aula.repositories.UsersRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,26 +19,28 @@ public class UsersController {
         this.usuarioRepository = usuarioRepository;
     }
 
-    @GetMapping("/api/usuarios/{id}")
+    // Função Get (Por ID) - Usuário
+    @GetMapping("/usuarios/{id}")
     public ResponseEntity getUsuario(@PathVariable("id") Integer id) {
         return usuarioRepository.findById(id)
                 .map(record -> ResponseEntity.ok().body(record))
-                .orElse(ResponseEntity.notFound().build());
+                .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
-    @GetMapping("/api/usuarios")
+    // Função Get (Todos) - Usuário
+    @GetMapping("/usuarios")
     public List<UsersModel> getUsuarios() {
         Iterable<UsersModel> usersInterable = usuarioRepository.findAll();
         List<UsersModel> users = new ArrayList<>();
 
         usersInterable.forEach(users::add);
 
-        // Retorna a lista de usuários
         return users;
     }
 
-    @PostMapping(path = "/api/usuarios")
-    public UsersModel insertUser(@RequestBody UsersModel users) {
-        return usuarioRepository.save(users);
+    // Função POST - Usuário
+    @PostMapping(path = "/usuarios")
+    public ResponseEntity<?> insertUser(@RequestBody UsersModel users) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(usuarioRepository.save(users));
     }
 }

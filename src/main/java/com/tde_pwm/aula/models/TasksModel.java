@@ -1,11 +1,11 @@
 package com.tde_pwm.aula.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Entity(name = "tasks")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
@@ -25,11 +25,11 @@ public class TasksModel {
     private Status status;
 
     @ManyToOne(targetEntity = UsersModel.class, fetch = FetchType.EAGER)
-    @JoinColumn(name = "assigned_by_user_id")
+    @JoinColumn(name = "assigned_by_user_id", nullable = false, referencedColumnName = "id")
     private UsersModel assignedByUser;
 
     @ManyToOne(targetEntity = UsersModel.class, fetch = FetchType.EAGER)
-    @JoinColumn(name = "created_by_user_id")
+    @JoinColumn(name = "created_by_user_id", nullable = false, referencedColumnName = "id")
     private UsersModel createdByUser;
 
     @CreationTimestamp
@@ -66,6 +66,7 @@ public class TasksModel {
         return createdAt;
     }
 
+
     // Setters
 
     public void setId(Integer id) {
@@ -81,7 +82,7 @@ public class TasksModel {
     }
 
     public void setStatus(String status) {
-        this.status = Status.valueOf(status);
+        this.status = Status.valueOf(status.toUpperCase());
     }
 
     public void setCreatedByUser(UsersModel createdByUser) {
@@ -96,10 +97,11 @@ public class TasksModel {
         this.createdAt = createdAt;
     }
 
+
     // Estrutura de dados aceitos pelo Status
     private enum Status {
         PENDENTE,
-        EM_PROGRESSO,
+        PROGRESSO,
         CONCLUIDO
     }
 }
