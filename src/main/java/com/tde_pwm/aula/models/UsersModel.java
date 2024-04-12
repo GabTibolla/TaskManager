@@ -1,24 +1,32 @@
 package com.tde_pwm.aula.models;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.tde_pwm.aula.helpers.UtilHelper;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Entity(name = "users")
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
 public class UsersModel {
 
-    // Colunas
+    public UsersModel() {}
 
+    // Colunas
     @Id
-    private String id = UUID.randomUUID().toString();
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
 
     @Column(nullable=false, length=50)
     private String name;
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Column(nullable = false, length = 40)
     private String password;
 
@@ -31,12 +39,13 @@ public class UsersModel {
     @Column(length = 15)
     private String cpf;
 
+    @CreationTimestamp
     @Column(nullable = false, length = 15)
     private LocalDateTime createdAt;
 
 // Getters
 
-    public String getId() {
+    public Integer getId() {
         return id;
     }
 
@@ -44,6 +53,7 @@ public class UsersModel {
         return name;
     }
 
+    @JsonIgnore
     public String getPassword() {
         return password;
     }
@@ -66,6 +76,11 @@ public class UsersModel {
 
     // Setters
 
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
     public void setName(String name) {
         this.name = name;
     }
@@ -79,7 +94,7 @@ public class UsersModel {
     }
 
     public void setPermission(String permission) {
-        this.permission = Permission.valueOf(permission);
+        this.permission = Permission.valueOf(permission.toUpperCase());
     }
 
     public void setCpf(String cpf) {

@@ -7,9 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @RestController
 public class UsersController {
@@ -21,7 +19,7 @@ public class UsersController {
     }
 
     @GetMapping("/api/usuarios/{id}")
-    public ResponseEntity getUsuario(@PathVariable("id") String id) {
+    public ResponseEntity getUsuario(@PathVariable("id") Integer id) {
         return usuarioRepository.findById(id)
                 .map(record -> ResponseEntity.ok().body(record))
                 .orElse(ResponseEntity.notFound().build());
@@ -33,14 +31,13 @@ public class UsersController {
         List<UsersModel> users = new ArrayList<>();
 
         usersInterable.forEach(users::add);
+
         // Retorna a lista de usuários
         return users;
     }
 
     @PostMapping(path = "/api/usuarios")
     public UsersModel insertUser(@RequestBody UsersModel users) {
-        users.setCreatedAt(LocalDateTime.now());
-        //users.setId(UUID.randomUUID().toString());
         return usuarioRepository.save(users);
     }
 }

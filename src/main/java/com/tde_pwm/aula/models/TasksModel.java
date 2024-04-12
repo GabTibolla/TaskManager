@@ -1,14 +1,18 @@
 package com.tde_pwm.aula.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity(name = "tasks")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class TasksModel {
     @Id
-    private String id = UUID.randomUUID().toString();
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
 
     @Column(length = 20, nullable = false)
     private String title;
@@ -20,18 +24,21 @@ public class TasksModel {
     @Column(length = 15, nullable = false)
     private Status status;
 
-    @ManyToOne
-    private UsersModel createdByUser;
-
-    @ManyToOne
+    @ManyToOne(targetEntity = UsersModel.class, fetch = FetchType.EAGER)
+    @JoinColumn(name = "assigned_by_user_id")
     private UsersModel assignedByUser;
 
+    @ManyToOne(targetEntity = UsersModel.class, fetch = FetchType.EAGER)
+    @JoinColumn(name = "created_by_user_id")
+    private UsersModel createdByUser;
+
+    @CreationTimestamp
     @Column(length = 20)
     private LocalDateTime createdAt;
 
     // Getters
 
-    public String getId() {
+    public Integer getId() {
         return id;
     }
 
@@ -60,6 +67,10 @@ public class TasksModel {
     }
 
     // Setters
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     public void setTitle(String title) {
         this.title = title;
@@ -91,21 +102,4 @@ public class TasksModel {
         EM_PROGRESSO,
         CONCLUIDO
     }
-
-//    public boolean isValidStatus(String status) {
-//        for (Status s : Status.values()) {
-//            if (s.name().equalsIgnoreCase(status)) {
-//                return true;
-//            }
-//        }
-//        return false;
-//    }
-//
-//    public void setStatus(String status) {
-//        if (isValidStatus(status)) {
-//            this.status = Status.valueOf(status.toUpperCase());
-//        } else {
-//            throw new IllegalArgumentException("Status inválido: " + status);
-//        }
-//    }
 }
