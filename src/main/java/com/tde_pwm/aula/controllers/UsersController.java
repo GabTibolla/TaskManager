@@ -23,9 +23,14 @@ public class UsersController {
     // Função Get (Por ID) - Usuário
     @GetMapping("/usuarios/{id}")
     public ResponseEntity getUsuario(@PathVariable("id") Integer id) {
-        return usuarioRepository.findById(id)
-                .map(record -> ResponseEntity.ok().body(record))
-                .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+        UsersModel user = usuarioRepository.findById(id).orElse(null);
+
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(("{\"message\": \"Usuário não encontrado\" }"));
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body(user);
+
     }
 
     // Função Get (Todos) - Usuário
@@ -45,7 +50,8 @@ public class UsersController {
         UsersModel user = usuarioRepository.findById(id).orElse(null);
 
         if (user == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não encontrado");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(("{\"message\": \"Usuário não encontrado\" }"));
+
         }
 
         if (usersModel.getName() != null) {
@@ -75,11 +81,12 @@ public class UsersController {
         // Verifica se o usuário existe
         UsersModel user = usuarioRepository.findById(id).orElse(null);
         if (user == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não encontrado");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(("{\"message\": \"Usuário não encontrado\" }"));
+
         }
 
         usuarioRepository.delete(user);
 
-        return ResponseEntity.ok().body("Usuário excluído com sucesso");
+        return ResponseEntity.status(HttpStatus.OK).body(("{\"message\": \"Usuário excluído com sucesso\" }"));
     }
 }

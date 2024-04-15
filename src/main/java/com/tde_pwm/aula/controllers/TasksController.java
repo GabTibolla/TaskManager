@@ -28,9 +28,7 @@ public class TasksController {
 
     @GetMapping("/task/{id}")
     public ResponseEntity getTask(@PathVariable(name = "id") Integer id) {
-        return tasksRepository.findById(id)
-                .map(record -> ResponseEntity.ok().body(record))
-                .orElse(ResponseEntity.notFound().build());
+        return tasksRepository.findById(id).map(record -> ResponseEntity.ok().body(record)).orElse(ResponseEntity.notFound().build());
     }
 
     @GetMapping("/tasks")
@@ -49,18 +47,18 @@ public class TasksController {
         TasksModel taskModel = tasksRepository.findById(id).orElse(null);
 
         if (taskModel == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Task não encontrada");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(("{\"message\": \"Task não encontrada\" }"));
         }
 
-        if (task.getDescription() != null){
+        if (task.getDescription() != null) {
             taskModel.setDescription(task.getDescription());
         }
 
-        if (task.getStatus() != null){
+        if (task.getStatus() != null) {
             taskModel.setStatus(task.getStatus());
         }
 
-        if (task.getTitle() != null){
+        if (task.getTitle() != null) {
             taskModel.setTitle(task.getTitle());
         }
 
@@ -78,9 +76,7 @@ public class TasksController {
         UsersModel userAssigned = entityManager.find(UsersModel.class, idAssigned);
 
         if (userAssigned == null || userCreator == null) {
-            return ResponseEntity
-                    .status(HttpStatus.NOT_FOUND)
-                    .body("Usuário criador ou usuário atribuído não encontrado.");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(("{\"message\": \"Usuário criador ou usuário atribuído não encontrado.\" }"));
         }
 
         task.setAssignedByUser(userAssigned);
@@ -94,12 +90,14 @@ public class TasksController {
     public ResponseEntity<?> deleteTask(@PathVariable(name = "id") Integer id) {
         TasksModel task = tasksRepository.findById(id).orElse(null);
         if (task == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Task não encontrada");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(("{\"message\": \"Task não encontrada\" }"));
         }
 
         tasksRepository.delete(task);
 
-        return ResponseEntity.status(HttpStatus.OK).body("Task excluida com sucesso");
+        return ResponseEntity.status(HttpStatus.OK).body(("{\"message\": \"Task excluida com sucesso\" }"));
+
+
     }
 
 }
