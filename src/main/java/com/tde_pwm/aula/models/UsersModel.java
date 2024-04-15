@@ -1,14 +1,13 @@
 package com.tde_pwm.aula.models;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import com.tde_pwm.aula.helpers.UtilHelper;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity(name = "users")
 @JsonIdentityInfo(
@@ -26,10 +25,6 @@ public class UsersModel {
     @Column(nullable=false, length=50)
     private String name;
 
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    @Column(nullable = false, length = 40)
-    private String password;
-
     @Column(nullable = false, length=50)
     private String mail;
 
@@ -43,6 +38,18 @@ public class UsersModel {
     @Column(nullable = false, length = 15)
     private LocalDateTime createdAt;
 
+    @Column(length = 15)
+    private LocalDateTime updatedAt;
+
+    @OneToMany(mappedBy = "createdByUser", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<TasksModel> tasks = new ArrayList<>();
+
+    @OneToMany(mappedBy = "assignedByUser", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<TasksModel> tasksAssigned = new ArrayList<>();
+
+    @OneToMany(mappedBy = "assignedBy", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<SubTaskModel> tasksAssignedSubTask = new ArrayList<>();
+
 // Getters
 
     public Integer getId() {
@@ -51,11 +58,6 @@ public class UsersModel {
 
     public String getName() {
         return name;
-    }
-
-    @JsonIgnore
-    public String getPassword() {
-        return password;
     }
 
     public String getMail() {
@@ -74,6 +76,8 @@ public class UsersModel {
         return createdAt;
     }
 
+    public LocalDateTime getUpdatedAt() { return updatedAt; }
+
     // Setters
 
 
@@ -83,10 +87,6 @@ public class UsersModel {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public void setPassword(String password) {
-        this.password = UtilHelper.hashPassword(password);
     }
 
     public void setMail(String mail) {
@@ -105,9 +105,10 @@ public class UsersModel {
         this.createdAt = createdAt;
     }
 
+    public void setUpdatedAt(LocalDateTime updatedAt) {this.updatedAt = updatedAt;}
+
     private enum Permission {
         ADMIN,
-        USER,
         DEV,
     }
 }

@@ -20,7 +20,7 @@ public class SubTaskModel {
     private String description;
 
     @Column(nullable = false)
-    private int timeHours;
+    private Integer timeHours;
 
     @CreationTimestamp
     @Column(nullable = false)
@@ -45,7 +45,7 @@ public class SubTaskModel {
         return description;
     }
 
-    public int getTimeHours() {
+    public Integer getTimeHours() {
         return timeHours;
     }
 
@@ -71,7 +71,7 @@ public class SubTaskModel {
         this.description = description;
     }
 
-    public void setTimeHours(int timeHours) {
+    public void setTimeHours(Integer timeHours) {
         this.timeHours = timeHours;
     }
 

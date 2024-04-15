@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity(name = "tasks")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
@@ -35,6 +36,12 @@ public class TasksModel {
     @CreationTimestamp
     @Column(length = 20)
     private LocalDateTime createdAt;
+
+    @Column(length = 20)
+    private LocalDateTime updateAt;
+
+    @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<SubTaskModel> tasks;
 
     // Getters
 
@@ -66,6 +73,8 @@ public class TasksModel {
         return createdAt;
     }
 
+    public LocalDateTime getUpdateAt() {return updateAt;}
+
 
     // Setters
 
@@ -96,6 +105,8 @@ public class TasksModel {
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
+
+    public void setUpdateAt(LocalDateTime updateAt) {this.updateAt = updateAt;}
 
 
     // Estrutura de dados aceitos pelo Status

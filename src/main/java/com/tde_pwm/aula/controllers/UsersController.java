@@ -1,6 +1,5 @@
 package com.tde_pwm.aula.controllers;
 
-import com.tde_pwm.aula.helpers.UtilHelper;
 import com.tde_pwm.aula.models.UsersModel;
 import com.tde_pwm.aula.repositories.UsersRepository;
 import org.springframework.http.HttpStatus;
@@ -14,9 +13,11 @@ import java.util.*;
 public class UsersController {
 
     private final UsersRepository usuarioRepository;
+    private final UsersRepository usersRepository;
 
-    public UsersController(UsersRepository usuarioRepository) {
+    public UsersController(UsersRepository usuarioRepository, UsersRepository usersRepository) {
         this.usuarioRepository = usuarioRepository;
+        this.usersRepository = usersRepository;
     }
 
     // Função Get (Por ID) - Usuário
@@ -38,9 +39,47 @@ public class UsersController {
         return users;
     }
 
+    // Função PUT - Usuário
+    @PutMapping(path = "/usuarios/{id}")
+    public ResponseEntity<?> updateUsuario(@RequestBody UsersModel usersModel, @PathVariable("id") Integer id) {
+        UsersModel user = usuarioRepository.findById(id).orElse(null);
+
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não encontrado");
+        }
+
+        if (usersModel.getName() != null) {
+            user.setName(usersModel.getName());
+        }
+        if (usersModel.getPermission() != null){
+            user.setPermission(usersModel.getPermission());
+        }
+
+        // Atualiza a hora de edição do usuário
+        user.setUpdatedAt(LocalDateTime.now());
+
+        usersModel = usersRepository.save(user);
+
+        return ResponseEntity.ok().body(usersModel);
+    }
+
     // Função POST - Usuário
     @PostMapping(path = "/usuarios")
     public ResponseEntity<?> insertUser(@RequestBody UsersModel users) {
         return ResponseEntity.status(HttpStatus.CREATED).body(usuarioRepository.save(users));
+    }
+
+    // Função DELETE - Usuário
+    @DeleteMapping("/usuarios/{id}")
+    public ResponseEntity<?> deleteUsuario(@PathVariable("id") Integer id) {
+        // Verifica se o usuário existe
+        UsersModel user = usuarioRepository.findById(id).orElse(null);
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não encontrado");
+        }
+
+        usuarioRepository.delete(user);
+
+        return ResponseEntity.ok().body("Usuário excluído com sucesso");
     }
 }
