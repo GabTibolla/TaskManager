@@ -22,41 +22,57 @@ public class UsersController {
 
     // Função Get (Por ID) - Usuário
     @GetMapping("/usuarios/{id}")
-    public ResponseEntity getUsuario(@PathVariable("id") Integer id) {
+    public ResponseEntity<?> getUsuario(@PathVariable("id") Integer id) {
+        // Buscando usuario
         UsersModel user = usuarioRepository.findById(id).orElse(null);
 
+        // Se for nulo, retorna que não encontrou
         if (user == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(("{\"message\": \"Usuário não encontrado\" }"));
         }
 
+        // Retorna o usuário
         return ResponseEntity.status(HttpStatus.OK).body(user);
 
     }
 
     // Função Get (Todos) - Usuário
     @GetMapping("/usuarios")
-    public List<UsersModel> getUsuarios() {
+    public ResponseEntity<?> getUsuarios() {
+        // Buscando todos os usuários
         Iterable<UsersModel> usersInterable = usuarioRepository.findAll();
         List<UsersModel> users = new ArrayList<>();
 
+        // Percorre os usuários e insere no vetor
         usersInterable.forEach(users::add);
 
-        return users;
+        // Se não houver usuários, retorna
+        if (users.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(("{\"message\": \"Não há usuários para exibir\" }"));
+        }
+
+        // retorna os usuários
+        return ResponseEntity.status(HttpStatus.OK).body(users);
     }
 
     // Função PUT - Usuário
     @PutMapping(path = "/usuarios/{id}")
     public ResponseEntity<?> updateUsuario(@RequestBody UsersModel usersModel, @PathVariable("id") Integer id) {
+        // Buscando o usuário pelo ID
         UsersModel user = usuarioRepository.findById(id).orElse(null);
 
+        // Verifica se existe o usuário
         if (user == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(("{\"message\": \"Usuário não encontrado\" }"));
 
         }
 
+        // Verifica se o nome veio no body
         if (usersModel.getName() != null) {
             user.setName(usersModel.getName());
         }
+
+        // Verifica se a alteração de permissão veio no body
         if (usersModel.getPermission() != null){
             user.setPermission(usersModel.getPermission());
         }
@@ -64,29 +80,36 @@ public class UsersController {
         // Atualiza a hora de edição do usuário
         user.setUpdatedAt(LocalDateTime.now());
 
+        // salva com os dados enviados pelo json
         usersModel = usersRepository.save(user);
 
+        // retorna
         return ResponseEntity.ok().body(usersModel);
     }
 
     // Função POST - Usuário
     @PostMapping(path = "/usuarios")
     public ResponseEntity<?> insertUser(@RequestBody UsersModel users) {
+        // Retorna o usuário criado
         return ResponseEntity.status(HttpStatus.CREATED).body(usuarioRepository.save(users));
     }
 
     // Função DELETE - Usuário
     @DeleteMapping("/usuarios/{id}")
     public ResponseEntity<?> deleteUsuario(@PathVariable("id") Integer id) {
-        // Verifica se o usuário existe
+        // Buscando usuario
         UsersModel user = usuarioRepository.findById(id).orElse(null);
+
+        // Verifica se o usuário existe
         if (user == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(("{\"message\": \"Usuário não encontrado\" }"));
 
         }
 
+        // Deleta, se existir
         usuarioRepository.delete(user);
 
+        // Retorna OK
         return ResponseEntity.status(HttpStatus.OK).body(("{\"message\": \"Usuário excluído com sucesso\" }"));
     }
 }
