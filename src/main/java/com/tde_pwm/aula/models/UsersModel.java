@@ -109,5 +109,6 @@ public class UsersModel {
     private enum Permission {
         ADMIN,
         DEV,
+        USER,
     }
 }

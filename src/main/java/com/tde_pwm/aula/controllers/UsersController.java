@@ -3,6 +3,7 @@ package com.tde_pwm.aula.controllers;
 import com.tde_pwm.aula.models.UsersModel;
 import com.tde_pwm.aula.repositories.UsersRepository;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,6 +11,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 @RestController
+@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 public class UsersController {
 
     private final UsersRepository usuarioRepository;
@@ -21,7 +23,7 @@ public class UsersController {
     }
 
     // Função Get (Por ID) - Usuário
-    @GetMapping("/usuarios/{id}")
+    @GetMapping("/usuario/{id}")
     public ResponseEntity<?> getUsuario(@PathVariable("id") Integer id) {
         // Buscando usuario
         UsersModel user = usuarioRepository.findById(id).orElse(null);
@@ -56,15 +58,22 @@ public class UsersController {
     }
 
     // Função PUT - Usuário
-    @PutMapping(path = "/usuarios/{id}")
-    public ResponseEntity<?> updateUsuario(@RequestBody UsersModel usersModel, @PathVariable("id") Integer id) {
+    @PutMapping(path = "@user/{idUser}/usuario/{id}")
+    public ResponseEntity<?> updateUsuario(@PathVariable int idUser, @RequestBody UsersModel usersModel, @PathVariable("id") Integer id) {
         // Buscando o usuário pelo ID
         UsersModel user = usuarioRepository.findById(id).orElse(null);
 
+        // Busca id do usuário que vai modificar
+        UsersModel userManager= usersRepository.findById(idUser).orElse(null);
+
         // Verifica se existe o usuário
-        if (user == null) {
+        if (user == null || userManager == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(("{\"message\": \"Usuário não encontrado\" }"));
 
+        }
+
+        if (!userManager.getPermission().equals("ADMIN")) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(("{\"message\": \"Usuário não tem as permissões necessárias\" }"));
         }
 
         // Verifica se o nome veio no body
@@ -88,22 +97,28 @@ public class UsersController {
     }
 
     // Função POST - Usuário
-    @PostMapping(path = "/usuarios")
+    @PostMapping(path = "/usuario")
     public ResponseEntity<?> insertUser(@RequestBody UsersModel users) {
         // Retorna o usuário criado
         return ResponseEntity.status(HttpStatus.CREATED).body(usuarioRepository.save(users));
     }
 
     // Função DELETE - Usuário
-    @DeleteMapping("/usuarios/{id}")
-    public ResponseEntity<?> deleteUsuario(@PathVariable("id") Integer id) {
+    @DeleteMapping("/user/{idUser}/usuario/{id}")
+    public ResponseEntity<?> deleteUsuario(@PathVariable int idUser, @PathVariable("id") Integer id) {
         // Buscando usuario
         UsersModel user = usuarioRepository.findById(id).orElse(null);
 
-        // Verifica se o usuário existe
-        if (user == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(("{\"message\": \"Usuário não encontrado\" }"));
+        // Busca id do usuário que vai modificar
+        UsersModel userManager= usersRepository.findById(idUser).orElse(null);
 
+        // Verifica se o usuário existe
+        if (user == null || userManager == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(("{\"message\": \"Usuário não encontrado\" }"));
+        }
+
+        if (!userManager.getPermission().equals("ADMIN")) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(("{\"message\": \"Usuário não tem as permissões necessárias\" }"));
         }
 
         // Deleta, se existir
