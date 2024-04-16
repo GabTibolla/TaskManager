@@ -1,0 +1,146 @@
+{
+	"info": {
+		"_postman_id": "5c30f784-e0e2-42a5-8bc9-e207f00743f6",
+		"name": "SubTasks",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "25595168"
+	},
+	"item": [
+		{
+			"name": "Post SubTask",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"description\": \"Descrição da subtarefa\",\r\n  \"timeHours\": 3\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/user/1/task/1/subtask",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"user",
+						"1",
+						"task",
+						"1",
+						"subtask"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get All SubTask",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/user/1/task/1/subtasks",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"user",
+						"1",
+						"task",
+						"1",
+						"subtasks"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get SubTask",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/user/1/task/1/subtask/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"user",
+						"1",
+						"task",
+						"1",
+						"subtask",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update SubTask",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"description\" : \"Alterando descrição subtarefa\",\r\n    \"timeHours\" : 1\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/user/1/task/1/subtask/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"user",
+						"1",
+						"task",
+						"1",
+						"subtask",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete SubTask",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/user/1/task/1/subtask/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"user",
+						"1",
+						"task",
+						"1",
+						"subtask",
+						"1"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
