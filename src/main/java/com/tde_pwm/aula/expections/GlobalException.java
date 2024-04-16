@@ -14,6 +14,7 @@ public class GlobalException {
     @ResponseBody
     public String illegalArgumentExceptionHandler(IllegalArgumentException ex) {
         String errorMessage = ex.getMessage();
+
         // Extrai o valor que não foi encontrado da mensagem de erro
         String enumConstant = errorMessage.substring(errorMessage.lastIndexOf('.') + 1);
         return enumConstant + " não é um tipo válido";
