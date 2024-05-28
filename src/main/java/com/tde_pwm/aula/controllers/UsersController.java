@@ -35,8 +35,23 @@ public class UsersController {
 
         // Retorna o usuário
         return ResponseEntity.status(HttpStatus.OK).body(user);
-
     }
+
+    @GetMapping("/usuarioLogin/{mail}/{cpf}")
+    public ResponseEntity<?> getUsuarioByEmailAndCpf(@PathVariable String mail, @PathVariable String cpf) {
+        // Buscando usuário pelo email e CPF
+        UsersModel user = usuarioRepository.findByMailAndCpf(mail, cpf).orElse(null);
+
+        // Se for nulo, retorna que não encontrou
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"message\": \"Usuário não encontrado\" }");
+        }
+
+        // Retorna o usuário
+        return ResponseEntity.status(HttpStatus.OK).body(user);
+    }
+
+
 
     // Função Get (Todos) - Usuário
     @GetMapping("/usuarios")
