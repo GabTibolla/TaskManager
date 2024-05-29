@@ -106,7 +106,7 @@ public class UsersModel {
 
     public void setUpdatedAt(LocalDateTime updatedAt) {this.updatedAt = updatedAt;}
 
-    private enum Permission {
+    public enum Permission {
         ADMIN,
         DEV,
         USER,

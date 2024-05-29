@@ -22,6 +22,21 @@ public class UsersController {
         this.usersRepository = usersRepository;
     }
 
+    // Função Get (Por permissão) - Usuários com permissão "DEV"
+    @GetMapping("/usuarios/dev")
+    public ResponseEntity<?> getUsuariosByPermission() {
+        // Buscando usuários com permissão "DEV"
+        List<UsersModel> users = usuarioRepository.findByPermission(UsersModel.Permission.DEV);
+
+        // Se não encontrar nenhum usuário, retorna que não encontrou
+        if (users.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"message\": \"Nenhum usuário encontrado com permissão DEV\" }");
+        }
+
+        // Retorna a lista de usuários
+        return ResponseEntity.status(HttpStatus.OK).body(users);
+    }
+
     // Função Get (Por ID) - Usuário
     @GetMapping("/usuario/{id}")
     public ResponseEntity<?> getUsuario(@PathVariable("id") Integer id) {
