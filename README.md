@@ -1,5 +1,8 @@
 # API - JAVA 
 
+API Usada em conjunto com o Front, do repositorio:
+https://github.com/GabTibolla/TaskManagerFront
+
 Projeto inicializado com SpringBoot
 
 # Dependencias
