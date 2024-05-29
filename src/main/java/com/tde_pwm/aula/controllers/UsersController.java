@@ -88,7 +88,7 @@ public class UsersController {
     }
 
     // Função PUT - Usuário
-    @PutMapping(path = "@user/{idUser}/usuario/{id}")
+    @PutMapping(path = "/user/{idUser}/usuario/{id}")
     public ResponseEntity<?> updateUsuario(@PathVariable int idUser, @RequestBody UsersModel usersModel, @PathVariable("id") Integer id) {
         // Buscando o usuário pelo ID
         UsersModel user = usuarioRepository.findById(id).orElse(null);
